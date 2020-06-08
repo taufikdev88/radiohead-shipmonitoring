@@ -79,12 +79,14 @@ byte buf[sizeof(packet1)] = {0};
 void loop()
 {
   Serial.println("Sending to nrf24_server");
+
+  thisIsPacket1
   memcpy(buf, &packet1, sz);
   nrf24.send(buf, sz);
   nrf24.waitPacketSent();
-  delay(400);
+
+  waterTemp = 50.0;
   memcpy(buf, &packet2, sz);
   nrf24.send(buf, sz);
   nrf24.waitPacketSent();
-  delay(400);
 }
