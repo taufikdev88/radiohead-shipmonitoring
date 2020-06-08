@@ -72,23 +72,23 @@ void loop()
     if (nrf24.recv(buf, &len))
     {
       memcpy(&packet, buf, sizeof(packet));
+      
       Serial.println("got message");
-      Serial.print("date: ");
-      Serial.println(packet.date);
-      Serial.print("time: ");
-      Serial.println(packet.time);
-      Serial.print("val1: ");
-      Serial.println(packet.val1);
-      Serial.print("val2: ");
-      Serial.println(packet.val2);
-      Serial.print("val3: ");
-      Serial.println(packet.val3);
-      Serial.print("val4: ");
-      Serial.println(packet.val4);
-      Serial.print("val5: ");
-      Serial.println(packet.val5);
+//      Serial.print("date: ");
+//      Serial.println(packet.date);
+//      Serial.print("time: ");
+//      Serial.println(packet.time);
+//      Serial.print("val1: ");
+//      Serial.println(packet.val1);
+//      Serial.print("val2: ");
+//      Serial.println(packet.val2);
+//      Serial.print("val3: ");
+//      Serial.println(packet.val3);
+//      Serial.print("val4: ");
+//      Serial.println(packet.val4);
+//      Serial.print("val5: ");
+//      Serial.println(packet.val5);
 
-      return;
       if(isPacket1 == 0){
         isPacket1Received = true;
         doc["gpsDate"] = gpsDate;
@@ -107,7 +107,6 @@ void loop()
         serializeJson(doc, Serial);
         isPacket1Received = false;
       }
-//      if(isPacket1 != 0 && isPacket
     }
     else
     {
