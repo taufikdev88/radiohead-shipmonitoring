@@ -25,9 +25,13 @@ byte sz = sizeof(packet1);
 byte buf[sizeof(packet1)] = {0};
 
 void send_data(){
+  float temp = waterTemp;
+  thisIsPacket1
   memcpy(buf, &packet1, sz);
   nrf24.send(buf, sz);
   nrf24.waitPacketSent();
+
+  waterTemp = temp;
   memcpy(buf, &packet2, sz);
   nrf24.send(buf, sz);
   nrf24.waitPacketSent();

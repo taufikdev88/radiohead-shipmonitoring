@@ -91,19 +91,19 @@ void loop()
 
       if(isPacket1 == 0){
         isPacket1Received = true;
-        doc["gpsDate"] = gpsDate;
-        doc["gpsTime"] = gpsTime;
-        doc["gpsLat"] = gpsLat;
-        doc["gpsLong"] = gpsLong;
-        doc["current"] = sCur;
-        doc["voltage"] = sVolt;
+        doc["Date"] = gpsDate;
+        doc["Time"] = gpsTime;
+        doc["Latitude"] = gpsLat;
+        doc["Longitude"] = gpsLong;
+        doc["Current"] = sCur;
+        doc["Voltage"] = sVolt;
       }
       if(isPacket1 != 0 && isPacket1Received == true){
-        doc["waveHeight"] = waveHeight;
-        doc["wavePeriod"] = wavePeriod;
-        doc["wavePower"] = wavePower;
-        doc["airTemp"] = airTemp;
-        doc["waterTemp"] = waterTemp;
+        doc["WaveHeight"] = waveHeight;
+        doc["WavePeriod"] = wavePeriod;
+        doc["WavePower"] = wavePower;
+        doc["AirTemp"] = airTemp;
+        doc["WaterTemp"] = waterTemp;
         serializeJson(doc, Serial);
         Serial.println();
         isPacket1Received = false;

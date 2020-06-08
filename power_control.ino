@@ -12,7 +12,6 @@ void setup_power_control(){
 
 void set_new_alarm(){
   int wait_time = get_wait_time_from_voltage();
-  waitTime = wait_time;
   
   tcaselect(4);
   RTC.alarmInterrupt(ALARM_1, true);

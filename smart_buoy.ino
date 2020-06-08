@@ -7,7 +7,6 @@
 #include <Wire.h>
 
 struct data_holder {
-  int index;
   unsigned long date;
   unsigned long time;
   float val1;
@@ -46,7 +45,7 @@ struct data_holder {
 #define gpsLong packet1.val2
 #define sCur packet1.val3
 #define sVolt packet1.val4
-#define waitTime packet1.val5
+#define thisIsPacket1 packet1.val5=0;
 
 #define gpsDate2 packet2.date
 #define gpsTime2 packet2.time
@@ -80,6 +79,6 @@ void loop() {
   get_water_temperature();
   set_new_alarm();
   send_data();
-  delay(3000); // seemed to help radio communication reliability
+  delay(300); // seemed to help radio communication reliability
   turn_off();
 }
