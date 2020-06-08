@@ -21,19 +21,19 @@ void setup_radio(){
     Serial.println("setRF failed");
 }
 
+// siapkan buffer untuk menyimpan packet kita agar bisa dikirim melalui nrf24
+// karena nrf24 radiohead tidak menerima parameter berupa struct , maka perlu 
+// diubah ke byte dulu byte itu sama saja dengan uint8_t , lebar datanya sama 8bit
 byte sz = sizeof(packet1);
 byte buf[sizeof(packet1)] = {0};
 
 void send_data(){
-  float temp = waterTemp;
-  thisIsPacket1
-  memcpy(buf, &packet1, sz);
-  nrf24.send(buf, sz);
-  nrf24.waitPacketSent();
+  memcpy(buf, &packet1, sz); // simpan nilai struct tadi ke buffer
+  nrf24.send(buf, sz); // kirimkan data nya ke nrf24
+  nrf24.waitPacketSent(); // beri perintah untuk menunggu datanya terkirim
 
-  waterTemp = temp;
-  memcpy(buf, &packet2, sz);
-  nrf24.send(buf, sz);
+  memcpy(buf, &packet2, sz); // gantian packet2 yang di kirim ke buffer
+  nrf24.send(buf, sz); 
   nrf24.waitPacketSent();
 }
 

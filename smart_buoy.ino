@@ -6,6 +6,7 @@
 
 #include <Wire.h>
 
+// struktur data yang disiapkan untuk menampung nilai nilai sensor 
 struct data_holder {
   unsigned long date;
   unsigned long time;
@@ -38,6 +39,13 @@ struct data_holder {
 // water temp
 // }
 
+// #define adalah perintah agar compiler mengganti setiap kata awal dengan kata akhir
+// contohnya #define katapertama katakedua
+// saat sudah di compile maka katapertama akan berubah menjadi katakedua
+// ini digunakan untuk mempermudah pengisian sensor
+// contohnya biar tidak ribet saat pengen ngisi latitude, harus menghapal packet1.val1
+// tinggal didefine bahwa gpsLat itu packet1.val1 maka otomatis di codingan manapun
+// saat saya panggil gpsLat = 123123l; itu sama saja dengan packet1.val1 = 1231231;
 // define nama packet
 #define gpsDate1 packet1.date
 #define gpsTime1 packet1.time
@@ -45,7 +53,6 @@ struct data_holder {
 #define gpsLong packet1.val2
 #define sCur packet1.val3
 #define sVolt packet1.val4
-#define thisIsPacket1 packet1.val5=0;
 
 #define gpsDate2 packet2.date
 #define gpsTime2 packet2.time
@@ -66,6 +73,11 @@ void tcaselect(uint8_t i) {
 }
 
 void setup() {
+  packet1.val5=0; 
+  // karena saat packetnya banyak untuk menandai packet1 dan packet2, 
+  // seperti saat kusuruh mencoba yang ada indexnya ternyata nrf24 gak mau ngirim
+  // makanya di packet1.val5 digunakan untuk deteksi apakah dia packet1 atau tidak
+  // kalau packet1.val5 isinya nol/0 berarti paket itu adalah paket1
   setup_gps();
   setup_radio();
   setup_gy86();

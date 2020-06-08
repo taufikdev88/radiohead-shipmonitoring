@@ -19,6 +19,8 @@ RH_NRF24 nrf24;
 // RH_NRF24 nrf24(8, 10);// For Leonardo, need explicit SS pin
 // RH_NRF24 nrf24(8, 7); // For RFM73 on Anarduino Mini
 
+// struktur data disiapkan harus sama persis dengan struct yg ada di client
+// agar data dapat diterima
 struct data_holder {
   unsigned long date;
   unsigned long time;
@@ -29,6 +31,7 @@ struct data_holder {
   float val5;
 } packet;
 
+// sama seperti di smart_buoy yg client
 // define nama packet
 #define gpsDate packet.date
 #define gpsTime packet.time
@@ -44,8 +47,17 @@ struct data_holder {
 #define airTemp packet.val4
 #define waterTemp packet.val5
 
+/* 
+ * untuk mempermudah pengiriman data ke laptop, dan mempercepat dalam pengolahan data 
+ * maka menggunakan JSON adalah yg paling tepat, karena banyak library yg menyediakan
+ * untuk mengolah data JSON baik dalam serialize(membungkus) maupun deserealize(membuka)
+ */
 StaticJsonDocument<1024> doc;
 
+/*
+ * flag untuk menandai packet1 sudah diterima sebelum packet2, jika packet1 tidak diterima
+ * dan packet2 diterima terlebih dahulu, batalkan untuk meneruskan data ke laptop
+ */
 bool isPacket1Received = false;
 
 void setup() 
@@ -62,15 +74,36 @@ void setup()
 
 void loop()
 {
+  /*
+   * cek apakah nrf24 sudah menerima data
+   */
   if (nrf24.available())
   {
+    /*
+     * siapkan buffer untuk menerima datanya, persis seperti struct yg kita buat
+     */
     uint8_t buf[sizeof(packet)];
     uint8_t len = sizeof(buf);
+    /*
+     * cek apakah data yg diterima adalah data yang kita inginkan 
+     * jika tidak sama, maka jangan diterima
+     */
     if (nrf24.recv(buf, &len))
     {
+      /*
+       * ini kebalikan dari packet1 diubah ke buffer, ini adalah buffer dalam bentuk
+       * byte data dibongkar ke dalam struct data, sehingga mudah diolah
+       */
       memcpy(&packet, buf, sizeof(packet));
-      
+
+      /*
+       * cek apakah packet yang diterima ini adalah packet1 dengan mengecek di val5 harus 0
+       */
       if(isPacket1 == 0){
+        /*
+         * tandai flagnya bahwa packet1 sudah diterima dahulu
+         * dan simpan nilainya ke dalam json tadi
+         */
         isPacket1Received = true;
         doc["Date"] = gpsDate;
         doc["Time"] = gpsTime;
@@ -79,19 +112,43 @@ void loop()
         doc["Current"] = sCur;
         doc["Voltage"] = sVolt;
       }
+      /*
+       * cek apakah ini packet ke 2 tandanya nilai val5 tidak 0, dan cek juga apakah packet1
+       * sudah diterima duluan 
+       */
       if(isPacket1 != 0 && isPacket1Received == true){
+        /*
+         * simpan nilainya ke json
+         */
         doc["WaveHeight"] = waveHeight;
         doc["WavePeriod"] = wavePeriod;
         doc["WavePower"] = wavePower;
         doc["AirTemp"] = airTemp;
         doc["WaterTemp"] = waterTemp;
-        
+
+        /*
+         * lalu kirimkan jsonnya dalam bentuk string yang sudah cantik
+         * contohnya: {"key": "value", "key2": 12}
+         * tinggal nanti di sisi aplikasi desktop jalankan perintah deserealize
+         * 
+         * serial.println() dibutuhkan agar payload/json yg dikirim diberi tambahan \r\n
+         * \r\n dibutuhkan di sisi aplikasi desktop bahwa datanya sudah cukup itu
+         * \r\n artinya enter/new line/baris baru
+         */
         serializeJson(doc, Serial);
         Serial.println();
-        
+
+        /*
+         * kembalikan flag packet1 diterima ke false lagi untuk memastikan datanya urut lagi
+         * lalu lakukan pembersihan ke memory, karena json memakan memory arduinonya
+         */
         isPacket1Received = false;
         doc.garbageCollect();
       }
+      /*
+       * nah disini, jika yg diterima packet2 dahulu, sedangkan packet1 belum diterima
+       * buang saja langsung
+       */
       if(isPacket1 != 0 && isPacket1Received == false){
         doc.garbageCollect();
       }
