@@ -18,18 +18,14 @@ void get_gps_data(){
     while (ss.available() > 0) {
       if (gps.encode(ss.read())) {
         if (gps.location.isValid()){
-//          measurement_1.val_1 = gps.location.lat();
-//          measurement_1.val_2 = gps.location.lng();
             gpsLat = gps.location.lat();
             gpsLong = gps.location.lng();
         }
         if (gps.date.isValid() && gps.time.isValid()) {
-//            measurement_1.time = gps.time.value();
-//            measurement_2.time = gps.time.value();
-//            measurement_1.date = gps.date.value();
-//            measurement_2.date = gps.date.value();
-            gpsDate = gps.date.value();
-            gpsTime = gps.date.value();
+            gpsDate1 = gps.date.value();
+            gpsTime1 = gps.date.value();
+            gpsDate2 = gps.date.value();
+            gpsTime2 = gps.date.value();
         }
       }
     }

@@ -21,30 +21,21 @@ void setup_radio(){
     Serial.println("setRF failed");
 }
 
+byte sz = sizeof(packet1);
+byte buf[sizeof(packet1)] = {0};
+
 void send_data(){
-  // coba 1
-//  uint8_t ad[] = "sdsfasdfa";
-  String ad("ciba");
-  nrf24.send(ad, sizeof(ad));
-//  uint8_t timeData[] = "0," + String(gpsDate) + "," + String(gpsTime) + ",n";
-////  uint8_t timeData[] = "0," + String(gpsDate) + "," + String(gpsTime) + ",n";
-//  uint8_t gpsData[] = "1," + String(gpsLat) + "," + String(gpsLong) + ",n";
-//  uint8_t waveData[] = "2," + String(waveHeight) + "," + String(wavePeriod) + "," + String(wavePower) + ",n";
-//  uint8_t powerAndTempData[] = "3," + String(airTemp) + "," + String(waterTemp) + "," + String(sCur) + "," + String(sVolt) + ",n";
-//  
-//  nrf24.send(timeData, sizeof(timeData));
-//  nrf24.waitPacketSent();
-//  nrf24.send(gpsData, sizeof(gpsData));
-//  nrf24.waitPacketSent();
-//  nrf24.send(waveData, sizeof(waveData));
-//  nrf24.waitPacketSent();
-//  nrf24.send(powerAndTempData, sizeof(powerAndTempData));
-//  nrf24.waitPacketSent();
+  memcpy(buf, &packet1, sz);
+  nrf24.send(buf, sz);
+  nrf24.waitPacketSent();
+  memcpy(buf, &packet2, sz);
+  nrf24.send(buf, sz);
+  nrf24.waitPacketSent();
 }
 
 /*  
  *  
- * Koding lama 
+ * Koding lama library nrf adafruiut
  *  
  */
  /*

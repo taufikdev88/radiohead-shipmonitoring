@@ -13,6 +13,5 @@ void setup_water_temperature(){
 
 void get_water_temperature(){
   sensors.requestTemperatures();
-//  measurement_2.val_3 = sensors.getTempCByIndex(0);  
   waterTemp = sensors.getTempCByIndex(0);
 }

@@ -12,7 +12,7 @@ void setup_power_control(){
 
 void set_new_alarm(){
   int wait_time = get_wait_time_from_voltage();
-//  measurement_1.val_5 = wait_time;
+  waitTime = wait_time;
   
   tcaselect(4);
   RTC.alarmInterrupt(ALARM_1, true);
@@ -28,8 +28,6 @@ int get_wait_time_from_voltage(){
   float shuntvoltage = ina219.getShuntVoltage_mV();
   float busvoltage = ina219.getBusVoltage_V();
   float loadvoltage = busvoltage + (shuntvoltage / 1000);
-//  measurement_1.val_3 = ina219.getCurrent_mA();
-//  measurement_1.val_4 = loadvoltage;
   sCur = ina219.getCurrent_mA();
   sVolt = loadvoltage;
 

@@ -19,6 +19,7 @@ RH_NRF24 nrf24;
 // RH_NRF24 nrf24(8, 7); // For RFM73 on Anarduino Mini
 
 struct data_holder {
+  int index;
   unsigned long date;
   unsigned long time;
   float val1;
@@ -27,6 +28,7 @@ struct data_holder {
   float val4;
   float val5;
 } packet1;
+
 
 void setup() 
 {

@@ -28,7 +28,6 @@ void get_wave_stats(){
 
   unsigned long start_time = millis();
   
-//  measurement_2.val_4 = baro.readTemperature(true)/ 340.00 + 36.53;
   airTemp = baro.readTemperature(true) / 340.00 + 36.53;
   
   pressure = baro.readPressure(true);
@@ -45,8 +44,6 @@ void get_wave_stats(){
   }
   mid_point = (max_height + min_height)/2.0;
   wave_height = (max_height - mid_point) / 2.0;
-  
-//  measurement_2.val_1 = wave_height;
   waveHeight = wave_height;
   
   smudge_factor = wave_height * 0.15;
@@ -87,10 +84,8 @@ void get_wave_stats(){
     } 
   }
   
-//  measurement_2.val_2 = avg_period/1000;
   wavePeriod = avg_period/1000;
   
   // work out wave power according to https://en.wikipedia.org/wiki/Wave_power wave power formula
-//  measurement_2.val_5 = int(0.5 * wave_height * wave_height * avg_period / 1000);
   wavePower = int(0.5 * wave_height * wave_height * avg_period / 1000);
 }
