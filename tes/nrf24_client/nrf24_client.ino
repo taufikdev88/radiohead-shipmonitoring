@@ -82,9 +82,9 @@ void loop()
   memcpy(buf, &packet1, sz);
   nrf24.send(buf, sz);
   nrf24.waitPacketSent();
-  delay(500);
+  delay(400);
   memcpy(buf, &packet2, sz);
   nrf24.send(buf, sz);
   nrf24.waitPacketSent();
-  delay(1000);
+  delay(400);
 }

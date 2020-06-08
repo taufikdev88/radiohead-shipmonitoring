@@ -36,7 +36,7 @@ struct data_holder {
 #define gpsLong packet.val2
 #define sCur packet.val3
 #define sVolt packet.val4
-#define isPacket1 packet.val5=0;
+#define isPacket1 packet.val5
 
 #define waveHeight packet.val1
 #define wavePeriod packet.val2
@@ -45,7 +45,8 @@ struct data_holder {
 #define waterTemp packet.val5
 
 StaticJsonDocument<1024> doc;
-//doc.add("gpsDate");
+
+bool isPacket1Received = false;
 
 void setup() 
 {
@@ -86,6 +87,27 @@ void loop()
       Serial.println(packet.val4);
       Serial.print("val5: ");
       Serial.println(packet.val5);
+
+      return;
+      if(isPacket1 == 0){
+        isPacket1Received = true;
+        doc["gpsDate"] = gpsDate;
+        doc["gpsTime"] = gpsTime;
+        doc["gpsLat"] = gpsLat;
+        doc["gpsLong"] = gpsLong;
+        doc["current"] = sCur;
+        doc["voltage"] = sVolt;
+      }
+      if(isPacket1 != 0 && isPacket1Received == true){
+        doc["waveHeight"] = waveHeight;
+        doc["wavePeriod"] = wavePeriod;
+        doc["wavePower"] = wavePower;
+        doc["airTemp"] = airTemp;
+        doc["waterTemp"] = waterTemp;
+        serializeJson(doc, Serial);
+        isPacket1Received = false;
+      }
+//      if(isPacket1 != 0 && isPacket
     }
     else
     {
