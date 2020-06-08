@@ -105,7 +105,13 @@ void loop()
         doc["airTemp"] = airTemp;
         doc["waterTemp"] = waterTemp;
         serializeJson(doc, Serial);
+        Serial.println();
         isPacket1Received = false;
+        doc.garbageCollect();
+      }
+      if(isPacket1 != 0 && isPacket1Received == false){
+        doc.garbageCollect();
+        Serial.println("packet data tidak lengkap");
       }
     }
     else
