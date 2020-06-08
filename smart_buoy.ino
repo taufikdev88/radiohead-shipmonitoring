@@ -72,8 +72,6 @@ void setup() {
   setup_gy86();
   setup_power_control();
   setup_water_temperature();
-  packet1.index = 0;
-  packet2.index = 1;
 }
 
 void loop() {

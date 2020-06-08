@@ -9,6 +9,7 @@
 // Tested on Anarduino Mini (http://www.anarduino.com/mini/) with RFM73 module
 // Tested on Arduino Mega with Sparkfun WRL-00691 NRF25L01 module
 
+#include <ArduinoJson.h>
 #include <SPI.h>
 #include <RH_NRF24.h>
 
@@ -19,7 +20,6 @@ RH_NRF24 nrf24;
 // RH_NRF24 nrf24(8, 7); // For RFM73 on Anarduino Mini
 
 struct data_holder {
-  int index;
   unsigned long date;
   unsigned long time;
   float val1;
@@ -27,7 +27,25 @@ struct data_holder {
   float val3;
   float val4;
   float val5;
-} packet1;
+} packet;
+
+// define nama packet
+#define gpsDate packet.date
+#define gpsTime packet.time
+#define gpsLat packet.val1
+#define gpsLong packet.val2
+#define sCur packet.val3
+#define sVolt packet.val4
+#define isPacket1 packet.val5=0;
+
+#define waveHeight packet.val1
+#define wavePeriod packet.val2
+#define wavePower packet.val3
+#define airTemp packet.val4
+#define waterTemp packet.val5
+
+StaticJsonDocument<1024> doc;
+//doc.add("gpsDate");
 
 void setup() 
 {
@@ -48,24 +66,26 @@ void loop()
   if (nrf24.available())
   {
     // Should be a message for us now   
-    uint8_t buf[sizeof(packet1)];
+    uint8_t buf[sizeof(packet)];
     uint8_t len = sizeof(buf);
     if (nrf24.recv(buf, &len))
     {
-      memcpy(&packet1, buf, sizeof(packet1));
+      memcpy(&packet, buf, sizeof(packet));
       Serial.println("got message");
       Serial.print("date: ");
-      Serial.println(packet1.date);
+      Serial.println(packet.date);
       Serial.print("time: ");
-      Serial.println(packet1.time);
+      Serial.println(packet.time);
       Serial.print("val1: ");
-      Serial.println(packet1.val1);
+      Serial.println(packet.val1);
       Serial.print("val2: ");
-      Serial.println(packet1.val2);
+      Serial.println(packet.val2);
       Serial.print("val3: ");
-      Serial.println(packet1.val3);
+      Serial.println(packet.val3);
       Serial.print("val4: ");
-      Serial.println(packet1.val4);
+      Serial.println(packet.val4);
+      Serial.print("val5: ");
+      Serial.println(packet.val5);
     }
     else
     {

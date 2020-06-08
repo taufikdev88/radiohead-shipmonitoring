@@ -19,7 +19,6 @@ RH_NRF24 nrf24;
 // RH_NRF24 nrf24(8, 7); // For RFM73 on Anarduino Mini
 
 struct data_holder {
-  int index;
   unsigned long date;
   unsigned long time;
   float val1;
@@ -27,8 +26,24 @@ struct data_holder {
   float val3;
   float val4;
   float val5;
-} packet1;
+} packet1, packet2;
 
+// define nama packet
+#define gpsDate1 packet1.date
+#define gpsTime1 packet1.time
+#define gpsLat packet1.val1
+#define gpsLong packet1.val2
+#define sCur packet1.val3
+#define sVolt packet1.val4
+#define thisIsPacket1 packet1.val5=0;
+
+#define gpsDate2 packet2.date
+#define gpsTime2 packet2.time
+#define waveHeight packet2.val1
+#define wavePeriod packet2.val2
+#define wavePower packet2.val3
+#define airTemp packet2.val4
+#define waterTemp packet2.val5
 
 void setup() 
 {
@@ -42,27 +57,34 @@ void setup()
     Serial.println("setChannel failed");
   if (!nrf24.setRF(RH_NRF24::DataRate2Mbps, RH_NRF24::TransmitPower0dBm))
     Serial.println("setRF failed");    
+
+  gpsDate1 = 1231231;
+  gpsDate2 = 1231233;
+  gpsTime1 = 3213213;
+  gpsTime2 = 3322323;
+  gpsLat = -123.888999;
+  gpsLong = 78.332333;
+  sCur = 4.1;
+  sVolt = 12.2;
+  waveHeight = 12.3;
+  wavePeriod = 12.0;
+  wavePower = 88.2;
+  airTemp = 66.4;
+  waterTemp = 100.1;
 }
 
+byte sz = sizeof(packet1);
 byte buf[sizeof(packet1)] = {0};
 
 void loop()
 {
   Serial.println("Sending to nrf24_server");
-
-  packet1.date = 12312321;
-  packet1.time = 32132131;
-  packet1.val1 = -123.123123;
-  packet1.val2 = 30.123123;
-  packet1.val3 = 12.1;
-  packet1.val4 = 1.1;
-  
-  // Send a message to nrf24_server
-  byte sz = sizeof(packet1);
   memcpy(buf, &packet1, sz);
-  
   nrf24.send(buf, sz);
-  
   nrf24.waitPacketSent();
-  delay(400);
+  delay(500);
+  memcpy(buf, &packet2, sz);
+  nrf24.send(buf, sz);
+  nrf24.waitPacketSent();
+  delay(1000);
 }
