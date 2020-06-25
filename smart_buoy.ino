@@ -83,6 +83,7 @@ void setup() {
   setup_gy86();
   setup_power_control();
   setup_water_temperature();
+  setup_logger();
 }
 
 void loop() {
@@ -91,6 +92,7 @@ void loop() {
   get_water_temperature();
   set_new_alarm();
   send_data();
+  logger_save();
   delay(300); // seemed to help radio communication reliability
   turn_off();
 }
