@@ -1,6 +1,4 @@
 // komunikasi memakai i2c
-#include <DS3232RTC.h>
-#include <Adafruit_INA219.h>
 
 Adafruit_INA219 ina219;
 

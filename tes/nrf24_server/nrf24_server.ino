@@ -14,14 +14,14 @@
 #include <RH_NRF24.h>
 
 // Singleton instance of the radio driver
-RH_NRF24 nrf24;
-// RH_NRF24 nrf24(8, 7); // use this to be electrically compatible with Mirf
+//RH_NRF24 nrf24;
+ RH_NRF24 nrf24(8, 7); // use this to be electrically compatible with Mirf
 // RH_NRF24 nrf24(8, 10);// For Leonardo, need explicit SS pin
 // RH_NRF24 nrf24(8, 7); // For RFM73 on Anarduino Mini
 
 struct data_holder {
-  unsigned long date;
-  unsigned long time;
+//  unsigned long date;
+//  unsigned long time;
   float val1;
   float val2;
   float val3;
@@ -30,8 +30,8 @@ struct data_holder {
 } packet;
 
 // define nama packet
-#define gpsDate packet.date
-#define gpsTime packet.time
+//#define gpsDate packet.date
+//#define gpsTime packet.time
 #define gpsLat packet.val1
 #define gpsLong packet.val2
 #define sCur packet.val3
@@ -51,8 +51,8 @@ bool isPacket1Received = false;
 void setup() 
 {
   Serial.begin(9600);
-  while (!Serial) 
-    ; // wait for serial port to connect. Needed for Leonardo only
+//  while (!Serial) 
+//    ; // wait for serial port to connect. Needed for Leonardo only
   if (!nrf24.init())
     Serial.println("init failed");
   // Defaults after init are 2.402 GHz (channel 2), 2Mbps, 0dBm
@@ -74,29 +74,26 @@ void loop()
       memcpy(&packet, buf, sizeof(packet));
       
       Serial.println("got message");
-//      Serial.print("date: ");
-//      Serial.println(packet.date);
-//      Serial.print("time: ");
-//      Serial.println(packet.time);
-//      Serial.print("val1: ");
-//      Serial.println(packet.val1);
-//      Serial.print("val2: ");
-//      Serial.println(packet.val2);
-//      Serial.print("val3: ");
-//      Serial.println(packet.val3);
-//      Serial.print("val4: ");
-//      Serial.println(packet.val4);
-//      Serial.print("val5: ");
-//      Serial.println(packet.val5);
+      Serial.print("val1: ");
+      Serial.println(packet.val1);
+      Serial.print("val2: ");
+      Serial.println(packet.val2);
+      Serial.print("val3: ");
+      Serial.println(packet.val3);
+      Serial.print("val4: ");
+      Serial.println(packet.val4);
+      Serial.print("val5: ");
+      Serial.println(packet.val5);
 
       if(isPacket1 == 0){
         isPacket1Received = true;
-        doc["Date"] = gpsDate;
-        doc["Time"] = gpsTime;
+//        doc["Date"] = gpsDate;
+//        doc["Time"] = gpsTime;
         doc["Latitude"] = gpsLat;
         doc["Longitude"] = gpsLong;
         doc["Current"] = sCur;
         doc["Voltage"] = sVolt;
+        return;
       }
       if(isPacket1 != 0 && isPacket1Received == true){
         doc["WaveHeight"] = waveHeight;
@@ -108,10 +105,18 @@ void loop()
         Serial.println();
         isPacket1Received = false;
         doc.garbageCollect();
+        return;
       }
       if(isPacket1 != 0 && isPacket1Received == false){
         doc.garbageCollect();
-        Serial.println("packet data tidak lengkap");
+        Serial.println("packet 1 hilang");
+        return;
+      }
+      if(isPacket1 == 0 && isPacket1Received == true){
+        doc.garbageCollect();
+        isPacket1Received = false;
+        Serial.println("packet 2 hilang");
+        return;
       }
     }
     else

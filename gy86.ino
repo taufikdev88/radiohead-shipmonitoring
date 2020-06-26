@@ -1,19 +1,16 @@
 // komunikasi menggunakan i2c
-#include "Wire.h"
-#include "I2Cdev.h" //   Get these libraries from https://github.com/jrowberg/i2cdevlib/tree/master/Arduino
-#include "MPU6050.h" //  ^
-#include <MS5611.h> // Get this library from https://github.com/jarzebski/Arduino-MS5611
-
 MPU6050 mpu;
 MS5611 baro;
-
 void setup_gy86(){
-  Wire.begin();
+  Serial.println("tca select");
   tcaselect(5);
+  Serial.println("set i2c");
   mpu.setI2CMasterModeEnabled(false);
   mpu.setI2CBypassEnabled(true) ;
   mpu.setSleepEnabled(false);
+  Serial.println("initialize");
   mpu.initialize();
+  Serial.println("baro begin");
   baro.begin(MS5611_ULTRA_HIGH_RES);
 }
 

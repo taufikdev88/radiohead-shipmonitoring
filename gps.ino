@@ -1,12 +1,8 @@
 // komunikasi memakai serial di pin 3 dan 4
-#include <TinyGPS++.h>
-#include <SoftwareSerial.h>
-
 TinyGPSPlus gps;
 // Arduino -> GPS
 // d4->tx, d3->rx
 SoftwareSerial ss(4, 3);
-
 void setup_gps(){
   ss.begin(9600);
 }
@@ -22,10 +18,8 @@ void get_gps_data(){
             gpsLong = gps.location.lng();
         }
         if (gps.date.isValid() && gps.time.isValid()) {
-            gpsDate1 = gps.date.value();
-            gpsTime1 = gps.date.value();
-            gpsDate2 = gps.date.value();
-            gpsTime2 = gps.date.value();
+            gpsDate = gps.date.value();
+            gpsTime = gps.date.value();
         }
       }
     }

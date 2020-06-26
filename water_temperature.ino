@@ -1,6 +1,4 @@
 // komunikasi i2c
-#include <OneWire.h>
-#include <DallasTemperature.h>
 
 // DS18B20 - Water Temperature
 OneWire oneWire(6);

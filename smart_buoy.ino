@@ -5,11 +5,22 @@
 */
 
 #include <Wire.h>
+#include <SPI.h>
+#include <SD.h>
+#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+#include "I2Cdev.h" //   Get these libraries from https://github.com/jrowberg/i2cdevlib/tree/master/Arduino
+#include "MPU6050.h" //  ^
+#include <MS5611.h> // Get this library from https://github.com/jarzebski/Arduino-MS5611
+#include <DS3232RTC.h>
+#include <Adafruit_INA219.h>
+#include <RH_NRF24.h>
+//#include <inttypes.h>
+//#include <OneWire.h>
+#include <DallasTemperature.h>
 
 // struktur data yang disiapkan untuk menampung nilai nilai sensor 
 struct data_holder {
-  unsigned long date;
-  unsigned long time;
   float val1;
   float val2;
   float val3;
@@ -47,15 +58,11 @@ struct data_holder {
 // tinggal didefine bahwa gpsLat itu packet1.val1 maka otomatis di codingan manapun
 // saat saya panggil gpsLat = 123123l; itu sama saja dengan packet1.val1 = 1231231;
 // define nama packet
-#define gpsDate1 packet1.date
-#define gpsTime1 packet1.time
 #define gpsLat packet1.val1
 #define gpsLong packet1.val2
 #define sCur packet1.val3
 #define sVolt packet1.val4
 
-#define gpsDate2 packet2.date
-#define gpsTime2 packet2.time
 #define waveHeight packet2.val1
 #define wavePeriod packet2.val2
 #define wavePower packet2.val3
@@ -64,35 +71,68 @@ struct data_holder {
 
 #define TCAADDR 0x70
 
+float gpsDate, gpsTime;
+
 void tcaselect(uint8_t i) {
   if (i > 7) return;
- 
   Wire.beginTransmission(TCAADDR);
   Wire.write(1 << i);
   Wire.endTransmission();  
 }
 
 void setup() {
+  Serial.begin(9600);
+  Wire.begin();
+  
   packet1.val5=0; 
   // karena saat packetnya banyak untuk menandai packet1 dan packet2, 
   // seperti saat kusuruh mencoba yang ada indexnya ternyata nrf24 gak mau ngirim
   // makanya di packet1.val5 digunakan untuk deteksi apakah dia packet1 atau tidak
   // kalau packet1.val5 isinya nol/0 berarti paket itu adalah paket1
-  setup_gps();
-  setup_radio();
+//  Serial.println("setup gps");
+//  setup_gps();
+//  setup_radio();
+  Serial.println("gy");
   setup_gy86();
-  setup_power_control();
-  setup_water_temperature();
-  setup_logger();
+//  Serial.println("power");
+//  setup_power_control();
+//  Serial.println("setup temperatur");
+//  setup_water_temperature();
+//  setup_logger();
 }
 
 void loop() {
-  get_gps_data();
+//  Serial.println("get gps data");
+//  get_gps_data();
+  Serial.println("get wave");
   get_wave_stats();
-  get_water_temperature();
-  set_new_alarm();
-  send_data();
-  logger_save();
+//  Serial.println("get watear");
+//  get_water_temperature();
+//  Serial.println("set alarm");
+//  set_new_alarm();
+//  send_data();
+//  logger_save();
+  Serial.print(packet1.val1);
+  Serial.print('\t');
+  Serial.print(packet1.val2);
+  Serial.print('\t');
+  Serial.print(packet1.val3);
+  Serial.print('\t');
+  Serial.print(packet1.val4);
+  Serial.print('\t');
+  Serial.print(packet1.val5);
+  Serial.print('\t');
+  Serial.print(packet2.val1);
+  Serial.print('\t');
+  Serial.print(packet2.val2);
+  Serial.print('\t');
+  Serial.print(packet2.val3);
+  Serial.print('\t');
+  Serial.print(packet2.val4);
+  Serial.print('\t');
+  Serial.print(packet2.val5);
+  Serial.print('\t');
+  Serial.println();
   delay(300); // seemed to help radio communication reliability
-  turn_off();
+//  turn_off();
 }

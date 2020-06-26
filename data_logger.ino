@@ -1,7 +1,4 @@
-#include <SPI.h>
-#include <SD.h>
-
-const int chipSelect = 4;
+const int chipSelect = 5;
 
 void setup_logger(){
   Serial.begin(9600);
@@ -15,8 +12,8 @@ void setup_logger(){
 
 void logger_save(){
   String payload;
-  payload += ((String) "date: " + packet1.date + "\t");
-  payload += ((String) "time: " + packet1.time + "\t");
+  payload += ((String) "date: " + " mn"+ "\t");
+  payload += ((String) "time: " + "nn"+ "\t");
   payload += ((String) "lat: " + packet1.val1 + "\t");
   payload += ((String) "lng: " + packet1.val2 + "\t");
   payload += ((String) "cur: " + packet1.val3 + "\t");
