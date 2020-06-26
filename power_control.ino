@@ -3,7 +3,6 @@
 Adafruit_INA219 ina219;
 
 void setup_power_control(){
-  Wire.begin();
   ina219.begin();
   ina219.setCalibration_32V_1A();
 }

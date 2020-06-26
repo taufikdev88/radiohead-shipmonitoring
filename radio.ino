@@ -1,11 +1,4 @@
-// nrf24_client
-
-
-// Singleton instance of the radio driver
-//RH_NRF24 nrf24;
- RH_NRF24 nrf24(8, 7); // use this to be electrically compatible with Mirf
-// RH_NRF24 nrf24(8, 10);// For Leonardo, need explicit SS pin
-// RH_NRF24 nrf24(8, 7); // For RFM73 on Anarduino Mini
+RH_NRF24 nrf24(8, 7); 
 
 void setup_radio(){
   Serial.begin(9600); // untuk debugging ke laptop
@@ -28,43 +21,10 @@ void send_data(){
   memcpy(buf, &packet1, sz); // simpan nilai struct tadi ke buffer
   nrf24.send(buf, sz); // kirimkan data nya ke nrf24
   nrf24.waitPacketSent(); // beri perintah untuk menunggu datanya terkirim
-
+  delay(300);
+  
   memcpy(buf, &packet2, sz); // gantian packet2 yang di kirim ke buffer
   nrf24.send(buf, sz); 
   nrf24.waitPacketSent();
+  delay(300);
 }
-
-/*  
- *  
- * Koding lama library nrf adafruiut
- *  
- */
- /*
-#include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
-
-RF24 radio(8, 7); // CE, CSN
-
-void setup_radio(){
-  radio.begin();
-  radio.openWritingPipe(0xF0F0F0F0E1LL);
-  radio.openReadingPipe(1, 0xE8E8F0F0E1LL);
-  radio.setChannel(0x76);
-  radio.setPALevel(RF24_PA_MAX);
-  radio.setDataRate(RF24_250KBPS);
-  radio.setRetries(4,15);
-  radio.stopListening();
-  radio.enableDynamicPayloads();
-  radio.powerUp();
-  Serial.println("setup radio");
-}
-
-
-void send_data(){
-  //  we can only send 32 bytes at a time so we have to split up 
-  // the measurements
-  radio.write(&measurement_1, sizeof(measurement_1));
-  radio.write(&measurement_2, sizeof(measurement_2)) ;
-}
-*/

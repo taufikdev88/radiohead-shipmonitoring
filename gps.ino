@@ -10,7 +10,7 @@ void setup_gps(){
 void get_gps_data(){
   unsigned long start_time = millis();
   // try for 30 seconds and break if all is valid early
-  while ( millis()-start_time < 30000 ) {
+  while ( millis()-start_time < 300 ) {
     while (ss.available() > 0) {
       if (gps.encode(ss.read())) {
         if (gps.location.isValid()){

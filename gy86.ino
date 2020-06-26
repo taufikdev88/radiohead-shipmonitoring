@@ -33,7 +33,7 @@ void get_wave_stats(){
   min_height = altitude;
 
   //  for 15 seconds try and get wave height
-  while(millis() - start_time < 15000){
+  while(millis() - start_time < 1500){
     pressure = baro.readPressure(true);
     altitude = baro.getAltitude(pressure);
     if (altitude < min_height) min_height = altitude;

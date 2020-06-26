@@ -15,8 +15,8 @@
 #include <DS3232RTC.h>
 #include <Adafruit_INA219.h>
 #include <RH_NRF24.h>
-//#include <inttypes.h>
-//#include <OneWire.h>
+#include <inttypes.h>
+#include <OneWire.h>
 #include <DallasTemperature.h>
 
 // struktur data yang disiapkan untuk menampung nilai nilai sensor 
@@ -29,9 +29,6 @@ struct data_holder {
 } packet1, packet2;
 
 // packet1 = {
-// i=0
-// date
-// time
 // latitude
 // longitude
 // current
@@ -40,9 +37,6 @@ struct data_holder {
 // }
 
 // packet2 = {
-// i=1
-// date
-// time
 // wave height
 // wave period
 // wave power
@@ -69,10 +63,9 @@ struct data_holder {
 #define airTemp packet2.val4
 #define waterTemp packet2.val5
 
-#define TCAADDR 0x70
-
 float gpsDate, gpsTime;
 
+#define TCAADDR 0x70
 void tcaselect(uint8_t i) {
   if (i > 7) return;
   Wire.beginTransmission(TCAADDR);
@@ -89,27 +82,27 @@ void setup() {
   // seperti saat kusuruh mencoba yang ada indexnya ternyata nrf24 gak mau ngirim
   // makanya di packet1.val5 digunakan untuk deteksi apakah dia packet1 atau tidak
   // kalau packet1.val5 isinya nol/0 berarti paket itu adalah paket1
-//  Serial.println("setup gps");
-//  setup_gps();
-//  setup_radio();
+  Serial.println("setup gps");
+  setup_gps();
+  setup_radio();
   Serial.println("gy");
   setup_gy86();
-//  Serial.println("power");
-//  setup_power_control();
-//  Serial.println("setup temperatur");
-//  setup_water_temperature();
+  Serial.println("power");
+  setup_power_control();
+  Serial.println("setup temperatur");
+  setup_water_temperature();
 //  setup_logger();
 }
 
 void loop() {
 //  Serial.println("get gps data");
-//  get_gps_data();
+  get_gps_data();
   Serial.println("get wave");
   get_wave_stats();
-//  Serial.println("get watear");
-//  get_water_temperature();
-//  Serial.println("set alarm");
-//  set_new_alarm();
+  Serial.println("get watear");
+  get_water_temperature();
+  Serial.println("set alarm");
+  set_new_alarm();
 //  send_data();
 //  logger_save();
   Serial.print(packet1.val1);
@@ -119,8 +112,6 @@ void loop() {
   Serial.print(packet1.val3);
   Serial.print('\t');
   Serial.print(packet1.val4);
-  Serial.print('\t');
-  Serial.print(packet1.val5);
   Serial.print('\t');
   Serial.print(packet2.val1);
   Serial.print('\t');
@@ -133,6 +124,5 @@ void loop() {
   Serial.print(packet2.val5);
   Serial.print('\t');
   Serial.println();
-  delay(300); // seemed to help radio communication reliability
 //  turn_off();
 }
